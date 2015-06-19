@@ -154,8 +154,16 @@ describe 'consul' do
   end
 
   context "By default, a user and group should be installed" do
-    it { should contain_user('consul').with(:ensure => :present) }
-    it { should contain_group('consul').with(:ensure => :present) }
+    it { should contain_user('consul').with(:ensure => :present, :system => true) }
+    it { should contain_group('consul').with(:ensure => :present, :system => true) }
+  end
+
+  context "Allow creating non-system accounts" do
+    let(:params) {{
+      :system_accounts => false,
+    }}
+    it { should contain_user('consul').with(:ensure => :present, :system => false) }
+    it { should contain_group('consul').with(:ensure => :present, :system => false) }
   end
 
   context "When data_dir is provided" do
